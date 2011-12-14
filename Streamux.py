@@ -60,7 +60,7 @@ class node(threading.Thread):
 		while True:
 			if l.msg:
 				if not l.msg.split(':')[1] in self.nodes:
-					self.nodes[l.msg.split(':')[1]] = l.msg.split(':')[0]
+					self.nodes[l.msg.split(':')[1]] = {'IP':l.msg.split(':')[0]}
 				l.msg = ""
 				
 			if last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):

@@ -6,7 +6,7 @@ n.start()
 
 class HelloWorld(object):
     def index(self):
-        return "yaman:" + repr(n.nodes)
+        return repr(n.nodes)
     index.exposed = True
 
 cherrypy.quickstart(HelloWorld())
