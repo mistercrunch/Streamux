@@ -1,41 +1,64 @@
-#!/usr/bin/python
-#Server
-#gst-launch-0.10 filesrc location=test.mp3 ! mad ! audioconvert ! audio/x-raw-int,channels=2,depth=16,width=16, rate=44100 ! rtpL16pay  ! udpsink host=224.1.1.1 port=5000 auto-multicast=true 
+import socket,struct,time
+from datetime import datetime
+from uuid import getnode as get_mac
 
-#Client
-#gst-launch-0.10 udpsrc auto-multicast=true multicast-group=224.1.1.1 port=5000 ! "application/x-rtp,media=(string)audio, clock-rate=(int)44100, width=16, height=16, encoding-name=(string)L16, encoding-params=(string)1, channels=(int)2, channel-positions=(int)1, payload=(int)96" ! gstrtpjitterbuffer do-lost=true ! rtpL16depay ! audioconvert ! alsasink
-#Server
-gst-launch-0.10 \
-filesrc location=test.mp3 ! \
-mad ! \
-audioconvert ! \
-"audio/x-raw-int,rate=44100,channels=2" !\
-faac ! \
-rtpmp4apay ! \
-udpsink host=224.1.1.1 port=5000 auto-multicast=true sync=false
+MAC 			= get_mac()
+UDP_IP 			= '225.0.0.250'
+UDP_PORT 		= 8123
+MYTTL 			= 1 # Increase to reach other networks
+SEND_ID_INTERVAL	= 2
 
-#Client
-gst-launch-0.10 \
-udpsrc auto-multicast=true multicast-group=224.1.1.1 port=5000 ! \
-"application/x-rtp, media=(string)audio, clock-rate=(int)44100, encoding-name=(string)MP4A-LATM, cpresent=(string)0, config=(string)40002420, payload=(int)96, ssrc=(guint)746617717, clock-base=(guint)4130738665, seqnum-base=(guint)58682" ! \
-gstrtpbin ! \
-rtpmp4adepay ! \
-"audio/mpeg,mpegversion=(int)4,channels=(int)2,rate=(int)44100" ! \
-faad ! \
-alsasink sync=false
+def send_msg(msg):
+  addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
+  ttl_bin = struct.pack('@i', MYTTL)
+  s = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
+  s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl_bin)
+  s.sendto(msg + '\0', (addrinfo[4][0], UDP_PORT))
+  
+def main():
+
+	#Networking setup
+	addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
+	s = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
+	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	s.bind(('', UDP_PORT))
+	group_bin = socket.inet_pton(addrinfo[0], addrinfo[4][0])
+	mreq = group_bin + struct.pack('=I', socket.INADDR_ANY)
+	s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+
+	s.settimeout(2)
+
+	print("Listening!")
+	#last_id_sent = float(datetime.now().strftime('%s.%f'))
+	while True:
+		data = None
+		try :
+			data, sender = s.recvfrom(1500)
+			while data[-1:] == '\0':
+				data = data[:-1] # Strip trailing \0'
+			print sender, data
+		except:
+			send_msg(repr({'MAC':MAC}))
+			time.sleep(0.1)
+		
+		
+	
+        #print(data)
+		
+main()
 
 
-#Server
-gst-launch-0.10 \
-filesrc location=test.mp3 ! \
-mad ! \
-audioconvert ! \
-"audio/x-raw-int,rate=44100,channels=2" ! \
-udpsink host=224.1.1.1 port=5000 auto-multicast=true sync=false
-
-#Client
-gst-launch-0.10 \
-udpsrc auto-multicast=true multicast-group=224.1.1.1 port=5000 ! \
-"audio/x-raw-int, endianness=(int)1234, signed=(boolean)true, width=(int)32, depth=(int)32, rate=(int)44100, channels=(int)2" ! \
-gstrtpbin ! \
-alsasink sync=false
+"""
+class node:
+  def node():
+    self.network_key = ''
+  
+  def find_buddies(self, sock):
+    print "hello?"
+    sock.
+    
+    
+    
+n=node()
+n.find_buddies(sock)
+"""
