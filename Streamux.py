@@ -74,4 +74,6 @@ if len(sys.argv) > 1:
 	if sys.argv[1] == "start":
 		n = node()
 		n.start()
+		while True:
+			time.sleep(1)
 		
