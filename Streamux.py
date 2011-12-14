@@ -73,5 +73,5 @@ class node(threading.Thread):
 if len(sys.argv) > 1:
 	if sys.argv[1] == "start":
 		n = node()
-		sn.start()
+		n.start()
 		
