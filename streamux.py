@@ -41,6 +41,8 @@ class Listener(threading.Thread):
 class node(threading.Thread):	
 	def __init__(self):
 		self.nodes = {}
+		self.is_on = True
+		self.is_bcast = False
 		threading.Thread.__init__(self)
 		self.daemon = True
 		
@@ -59,7 +61,7 @@ class node(threading.Thread):
 		while True:
 			if l.msg:
 				if not l.msg.split(':')[1] in self.nodes:
-					self.nodes[l.msg.split(':')[1]] = {'IP':l.msg.split(':')[0]}
+					self.nodes[l.msg.split(':')[1]] = {'IP':l.msg.split(':')[0], 'IS_ON':self.is_on, 'IS_BCAST':self.is_bcast}
 				l.msg = ""
 				
 			if last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
@@ -79,11 +81,11 @@ if len(sys.argv) > 1:
 		start_webserver = True
 		
 if start_webserver:
-	import cherrypy
+	import cherrypy,json
 	class root:
 		
 		def json(self):
-			return repr(n.nodes)
+			return json.dumps(n.nodes)
 		json.exposed = True
 		
 		def jquery(self):
