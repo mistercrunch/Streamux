@@ -48,3 +48,8 @@ class GTK_Main:
 GTK_Main()
 gtk.gdk.threads_init()
 gtk.main()
+
+"""
+gst-launch-0.10 udpsrc auto-multicast=true multicast-group=224.1.1.1 port=5000 ! "application/x-rtp, media=(string)audio, clock-rate=(int)44100, encoding-name=(string)MP4A-LATM, cpresent=(string)0, config=(string)40002420, payload=(int)96, ssrc=(guint)746617717, clock-base=(guint)4130738665, seqnum-base=(guint)58682" ! gstrtpbin ! rtpmp4adepay ! "audio/mpeg,mpegversion=(int)4,channels=(int)2,rate=(int)44100" ! faad ! alsasink sync=false
+
+"""
