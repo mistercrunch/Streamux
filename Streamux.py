@@ -2,11 +2,13 @@ import socket,struct,time
 from datetime import datetime
 from uuid import getnode as get_mac
 
-MAC 			= get_mac()
-UDP_IP 			= '225.0.0.250'
-UDP_PORT 		= 8123
-MYTTL 			= 1 # Increase to reach other networks
+MAC 				= get_mac()
+UDP_IP 				= '225.0.0.250'
+UDP_PORT 			= 8123
+MYTTL 				= 1 # Increase to reach other networks
 SEND_ID_INTERVAL	= 2
+
+nodes = {}
 
 def send_msg(msg):
   addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
@@ -36,9 +38,15 @@ def main():
 			data, sender = s.recvfrom(1500)
 			while data[-1:] == '\0':
 				data = data[:-1] # Strip trailing \0'
-			print sender, data
+			#print sender, data
+			
+			if data.split(':')[0] == 'MAC':
+				if not data.split(':')[1] in nodes:
+					nodes[data.split(':')[1]] = {'IP': sender[0]}
+					print repr(nodes)
+				
 		except:
-			send_msg(repr({'MAC':MAC}))
+			send_msg('MAC:'+ str(MAC))
 			time.sleep(0.1)
 		
 		
