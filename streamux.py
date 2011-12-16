@@ -9,11 +9,14 @@ UDP_IP 				= '225.0.0.250'
 UDP_PORT 			= 8123
 POKE_INTERVAL		= 5
 
+keep_msg			= 10
+
 class Listener(threading.Thread):
 	def __init__(self):
-		self.msg = ""
+		self.msg = []
 		threading.Thread.__init__(self)
 		self.daemon = True
+		self.latest_messages = []
 		
 	def run(self):
 		addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
@@ -36,7 +39,13 @@ class Listener(threading.Thread):
 			else:
 				while data[-1:] == '\0':
 					data = data[:-1] # Strip trailing \0'
-				self.msg = sender[0] + ':' + data
+				msg = data.split(':')
+				msg.append(sender[0])
+				msg.append(str(datetime.now()))
+				print msg
+				self.latest_messages.append(msg)
+				self.latest_messages = self.latest_messages[-keep_msg:]
+				self.msg = msg
 
 class node(threading.Thread):	
 	def __init__(self):
@@ -55,14 +64,17 @@ class node(threading.Thread):
 		#Networking setup
 		
 	def run(self):
-		l = Listener()
-		l.start()
+		self.l = Listener()
+		self.l.start()
 		last_id_sent = 0
 		while True:
-			if l.msg:
-				if not l.msg.split(':')[1] in self.nodes:
-					self.nodes[l.msg.split(':')[1]] = {'IP':l.msg.split(':')[0], 'IS_ON':self.is_on, 'IS_BCAST':self.is_bcast}
-				l.msg = ""
+			if self.l.msg:
+				msg = self.l.msg
+				self.l.msg = ""
+				
+				if not msg[0] in self.nodes:
+					self.nodes[msg[1]] = {'IP':msg[2], 'IS_ON':self.is_on, 'IS_BCAST':self.is_bcast}
+				
 				
 			if last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
 				self.send_msg(str(MAC) + ':HELLO')
@@ -84,9 +96,13 @@ if start_webserver:
 	import cherrypy,json
 	class root:
 		
-		def json(self):
+		def json_nodes(self):
 			return json.dumps(n.nodes)
-		json.exposed = True
+		json_nodes.exposed = True
+		
+		def json_messages(self):
+			return json.dumps(sn.l.latest_messages)
+		json_messages.exposed = True
 		
 		def jquery(self):
 			return open('templates/jquery-1.7.1.min.js')
