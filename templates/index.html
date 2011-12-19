@@ -95,11 +95,24 @@
 
 <script type="text/javascript" src="jquery"></script>     
 <script language="javascript">
+function test(f){
+	var mac = $(f).parent().attr('id');
+	if ($(f).html()=='False'){
+		$.ajax('/mute_node/' + mac);
+		//$(f).html('True')
+	}
+	else{
+		$.ajax('/unmute_node/' + mac);
+		//$(f).html('False')
+	}	
+}
+
+
 $.getJSON('/json_nodes', function(data) {
 	var items = [];
 
 	$.each(data, function(key, val) {
-		items.push('<tr><td id='+key+'>' + val.IP + '</td><td>' + val.IS_ON + '</td><td>' + val.IS_BCAST +'</td></tr>');
+		items.push('<tr id="' + key + '"><td>' + val.IP + '</td><td onclick="test(this);">' + val.IS_ON + '</td><td>' + val.IS_BCAST +'</td></tr>');
 	});
 
 	$('<tbody/>', {

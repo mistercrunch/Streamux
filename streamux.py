@@ -4,7 +4,7 @@ from datetime import datetime
 from uuid import getnode as get_mac
 
 
-MAC 				= get_mac()
+
 UDP_IP 				= '225.0.0.250'
 UDP_PORT 			= 8123
 POKE_INTERVAL		= 5
@@ -40,20 +40,24 @@ class Listener(threading.Thread):
 				while data[-1:] == '\0':
 					data = data[:-1] # Strip trailing \0'
 				msg = data.split(':')
-				msg.append(sender[0])
-				msg.append(str(datetime.now()))
-				print msg
-				self.latest_messages.append(msg)
-				self.latest_messages = self.latest_messages[-keep_msg:]
+				msg.insert(0, sender[0])
+				msg.insert(0, str(datetime.now()))
+				
+				self.latest_messages.insert(0,msg)
+				self.latest_messages = self.latest_messages[:keep_msg]
 				self.msg = msg
+				
+
 
 class node(threading.Thread):	
 	def __init__(self):
 		self.nodes = {}
-		self.is_on = True
+		self.is_on = False
+		self.mac = str(get_mac())
 		self.is_bcast = False
 		threading.Thread.__init__(self)
 		self.daemon = True
+		self.last_id_sent=0
 		
 	def send_msg(self, msg):
 		addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
@@ -63,6 +67,22 @@ class node(threading.Thread):
 		s.sendto(msg + '\0', (addrinfo[4][0], UDP_PORT))
 		#Networking setup
 		
+	def send_info(self):
+		self.send_msg(self.mac + ':NODE_INFO:' + str(self.is_on) + ':' + str(self.is_bcast))
+		self.last_id_sent = float(datetime.now().strftime('%s.%f'))	
+	
+	def send_mute(self, mute_mac):
+		self.send_msg(self.mac + ':MUTE_NODE:' + str(mute_mac))
+		
+	def send_unmute(self, mute_mac):
+		self.send_msg(self.mac + ':UNMUTE_NODE:' + str(mute_mac))
+		
+	def mute_node(self):
+		self.is_on = False
+	
+	def unmute_node(self):
+		self.is_on = True
+		
 	def run(self):
 		self.l = Listener()
 		self.l.start()
@@ -71,14 +91,16 @@ class node(threading.Thread):
 			if self.l.msg:
 				msg = self.l.msg
 				self.l.msg = ""
+				if len(msg)>=2:
+					if msg[3] == "NODE_INFO" and len(msg)>=6:
+						self.nodes[msg[2]] = {'IP':msg[1], 'IS_ON':msg[4], 'IS_BCAST':msg[5]} 
+					elif msg[3] == "MUTE_NODE" and len(msg)>=3:
+						if msg[4] == self.mac: self.mute_node()
+					elif msg[3] == "UNMUTE_NODE" and len(msg)>=3:
+						if msg[4] == self.mac: self.unmute_node()
 				
-				if not msg[0] in self.nodes:
-					self.nodes[msg[1]] = {'IP':msg[2], 'IS_ON':self.is_on, 'IS_BCAST':self.is_bcast}
-				
-				
-			if last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
-				self.send_msg(str(MAC) + ':HELLO')
-				last_id_sent = float(datetime.now().strftime('%s.%f'))
+			if self.last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
+				self.send_info()
 				
 			#print float(datetime.now().strftime('%s.%f'))
 			time.sleep(0.1)
@@ -101,8 +123,18 @@ if start_webserver:
 		json_nodes.exposed = True
 		
 		def json_messages(self):
-			return json.dumps(sn.l.latest_messages)
+			return json.dumps(n.l.latest_messages)
 		json_messages.exposed = True
+		
+		def mute_node(self, mac):
+			n.send_mute(mac)
+			return mac + ' muted'
+		mute_node.exposed = True
+		
+		def unmute_node(self, mac):
+			n.send_unmute(mac)
+			return mac + ' unmuted'
+		unmute_node.exposed = True
 		
 		def jquery(self):
 			return open('templates/jquery-1.7.1.min.js')
