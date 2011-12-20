@@ -94,16 +94,17 @@ class node(threading.Thread):
 				if len(msg)>=2:
 					if msg[3] == "NODE_INFO" and len(msg)>=6:
 						self.nodes[msg[2]] = {'IP':msg[1], 'IS_ON':msg[4], 'IS_BCAST':msg[5]} 
-					elif msg[3] == "MUTE_NODE" and len(msg)>=3:
-						if msg[4] == self.mac: self.mute_node()
-					elif msg[3] == "UNMUTE_NODE" and len(msg)>=3:
-						if msg[4] == self.mac: self.unmute_node()
-				
+					else:
+						if msg[3] == "MUTE_NODE" and len(msg)>=3:
+							if msg[4] == self.mac: self.mute_node()
+						elif msg[3] == "UNMUTE_NODE" and len(msg)>=3:
+							if msg[4] == self.mac: self.unmute_node()
+						self.send_info()
 			if self.last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
 				self.send_info()
 				
 			#print float(datetime.now().strftime('%s.%f'))
-			time.sleep(0.1)
+			time.sleep(0.01)
 
 n = node()
 n.start()
@@ -146,7 +147,7 @@ if start_webserver:
 	cherrypy.quickstart(root())
 else:
 	while True:
-		time.sleep(0.1)
+		time.sleep(0.01)
 	
 					
 			

@@ -4,6 +4,7 @@
 		color:white;
 		background-color:grey;
 		margin:100px;
+
     }
     td{
 		color:#AAAAAA;
@@ -15,9 +16,13 @@
 		text-align:center;
 		color:white;
 	}
-	tbody tr:hover{
+	.clickable{
+		cursor:pointer;
+	}
+	.clickable:hover{
 		background:#333333;
 	}
+	
     a:hover{
 		color:white;
     }
@@ -25,6 +30,7 @@
 		margin:15px;
 	}
 	#title{
+			
 		margin-left: auto ;
 		margin-right: auto ;
 		text-align:center;
@@ -47,7 +53,7 @@
 		margin-left: auto ;
 		margin-right: auto ;
 		border-radius: 15px;
-		text-align:center;
+		text-align:left;
 		width:600px;
 		border-style:solid;
 		border-width:5px;
@@ -81,12 +87,14 @@
 	<body>
 		<div id="title">Streamux</div>
 		<div id="main">
-			<table id="main_table">
+			<table id="nodes_table">
 				<thead>
 					<td>IP</td>
 					<td>IS_ON</td>
 					<td>IS_BCAST</td>
 				</thead>
+				<tbody id="nodes_tbody">
+				</tbody>
 			</table>
 		</div>
 		<div id="log"></div>
@@ -95,39 +103,59 @@
 
 <script type="text/javascript" src="jquery"></script>     
 <script language="javascript">
-function test(f){
+
+function flip_mute(f){
 	var mac = $(f).parent().attr('id');
 	if ($(f).html()=='False'){
-		$.ajax('/mute_node/' + mac);
+		$.ajax('/unmute_node/' + mac);
 		//$(f).html('True')
 	}
 	else{
-		$.ajax('/unmute_node/' + mac);
+		$.ajax('/mute_node/' + mac);
 		//$(f).html('False')
-	}	
+	}
+	$(f).fadeOut('slow', function(){
+		refresh_node_list();
+		refresh_msg();
+		$(f).fadeIn('fast')
+	});
+	
 }
 
+function flip_bcast(f){
+	alert('Feature not availlable.');
+}
 
-$.getJSON('/json_nodes', function(data) {
-	var items = [];
+function refresh_node_list(){
+	$.getJSON('/json_nodes', function(data) {
+		var items = [];
 
-	$.each(data, function(key, val) {
-		items.push('<tr id="' + key + '"><td>' + val.IP + '</td><td onclick="test(this);">' + val.IS_ON + '</td><td>' + val.IS_BCAST +'</td></tr>');
+		$.each(data, function(key, val) {
+			var new_tr = '<tr id="' + key + '">';
+			new_tr += '<td>' + val.IP + '</td>';
+			new_tr += '<td class="clickable" onclick="flip_mute(this);">' + val.IS_ON + '</td>';
+			new_tr += '<td class="clickable" onclick="flip_bcast(this);">' + val.IS_BCAST +'</td>';
+			new_tr += '</tr>';
+			items.push(new_tr);
+		});
+
+		$('#nodes_tbody').html(items.join(''));
 	});
+}
+function refresh_msg(){
+	$.getJSON('/json_messages', function(data) {
+		var items = [];
 
-	$('<tbody/>', {
-		html: items.join('')
-	}).appendTo('#main_table');
-});
+		$.each(data, function(i, l) {
+			items.push(l+'<br>');
+		});
 
-$.getJSON('/json_messages', function(data) {
-	var items = [];
-
-	$.each(data, function(i, l) {
-		items.push(l+'<br>');
+		$('#log').html( items.join(''))
 	});
+}
+$(document).ready(function() {
+	refresh_node_list();
+	refresh_msg();
 
-	$('#log').html( items.join(''))
-	
 });
 </script>
