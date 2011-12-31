@@ -2,12 +2,12 @@
 import socket,struct,time,threading,sys
 from datetime import datetime
 from uuid import getnode as get_mac
-
+import zmq
 
 
 UDP_IP 				= '225.0.0.250'
 UDP_PORT 			= 8123
-POKE_INTERVAL		= 5
+POKE_INTERVAL		= 1
 
 keep_msg			= 10
 
@@ -19,34 +19,23 @@ class Listener(threading.Thread):
 		self.latest_messages = []
 		
 	def run(self):
-		addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
-		s = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
-		
-		s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		s.bind(('', UDP_PORT))
-		group_bin = socket.inet_pton(addrinfo[0], addrinfo[4][0])
-		mreq = group_bin + struct.pack('=I', socket.INADDR_ANY)
-		s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+		context = zmq.Context()
+		socket = context.socket(zmq.SUB)
 
+		socket.connect ("epgm://"+ UDP_IP +":" + str(UDP_PORT))
+		socket.setsockopt(zmq.SUBSCRIBE,'')
 		#s.settimeout(1)
 		print("Listening!")
 		#last_id_sent = float(datetime.now().strftime('%s.%f'))
 		while True:
-			try:
-				data, sender = s.recvfrom(1500)
-			except:
-				pass
-			else:
-				while data[-1:] == '\0':
-					data = data[:-1] # Strip trailing \0'
-				msg = data.split(':')
-				msg.insert(0, sender[0])
-				msg.insert(0, str(datetime.now()))
-				
-				self.latest_messages.insert(0,msg)
-				self.latest_messages = self.latest_messages[:keep_msg]
-				self.msg = msg
-				
+			data = socket.recv()
+			msg = data.split(':')
+			msg.insert(0, str(datetime.now()))
+			
+			self.latest_messages.insert(0,msg)
+			self.latest_messages = self.latest_messages[:keep_msg]
+			self.msg = msg
+			
 
 
 class node(threading.Thread):	
@@ -58,13 +47,12 @@ class node(threading.Thread):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		self.last_id_sent=0
+		self.context = zmq.Context()
+		self.socket = self.context.socket(zmq.PUB)
+		self.socket.bind("epgm://"+ UDP_IP +":" + str(UDP_PORT))
 		
 	def send_msg(self, msg):
-		addrinfo = socket.getaddrinfo(UDP_IP, None)[0]
-		ttl_bin = struct.pack('@i', 1) # Increase to reach other networks
-		s = socket.socket(addrinfo[0], socket.SOCK_DGRAM)
-		s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl_bin)
-		s.sendto(msg + '\0', (addrinfo[4][0], UDP_PORT))
+		self.socket.send(msg)
 		#Networking setup
 		
 	def send_info(self):
@@ -87,23 +75,27 @@ class node(threading.Thread):
 		self.l = Listener()
 		self.l.start()
 		last_id_sent = 0
+
 		while True:
 			if self.l.msg:
 				msg = self.l.msg
 				self.l.msg = ""
-				if len(msg)>=2:
-					if msg[3] == "NODE_INFO" and len(msg)>=6:
-						self.nodes[msg[2]] = {'IP':msg[1], 'IS_ON':msg[4], 'IS_BCAST':msg[5]} 
+				
+				print msg
+				if len(msg)>=3:
+					if msg[2] == "NODE_INFO" and len(msg)>=5:
+						self.nodes[msg[1]] = {'IP':'Unknown', 'IS_ON':msg[3], 'IS_BCAST':msg[4]} 
 					else:
-						if msg[3] == "MUTE_NODE" and len(msg)>=3:
-							if msg[4] == self.mac: self.mute_node()
-						elif msg[3] == "UNMUTE_NODE" and len(msg)>=3:
-							if msg[4] == self.mac: self.unmute_node()
+						if msg[2] == "MUTE_NODE" and len(msg)>=3:
+							if msg[3] == self.mac: self.mute_node()
+						elif msg[2] == "UNMUTE_NODE" and len(msg)>=3:
+							if msg[3] == self.mac: self.unmute_node()
 						self.send_info()
+						
+						
 			if self.last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
 				self.send_info()
-				
-			#print float(datetime.now().strftime('%s.%f'))
+
 			time.sleep(0.01)
 
 n = node()
