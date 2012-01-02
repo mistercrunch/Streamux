@@ -123,7 +123,20 @@ function flip_mute(f){
 }
 
 function flip_bcast(f){
-	alert('Feature not availlable.');
+	var mac = $(f).parent().attr('id');
+	if ($(f).html()=='False'){
+		$.ajax('/start_streaming/' + mac);
+		
+	}
+	else{
+		$.ajax('/stop_streaming/' + mac);
+		//$(f).html('False')
+	}
+	$(f).fadeOut('slow', function(){
+		refresh_node_list();
+		refresh_msg();
+		$(f).fadeIn('fast')
+	});
 }
 
 function refresh_node_list(){
