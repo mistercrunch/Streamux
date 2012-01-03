@@ -8,8 +8,6 @@ import pygst
 pygst.require("0.10")
 import gst
 
-
-
 UDP_IP 				= '225.0.0.250'
 UDP_PORT 			= 8123
 MUSIC_UDP_PORT		= UDP_PORT + 1
@@ -35,7 +33,7 @@ class Listener(threading.Thread):
 		socket.connect ("epgm://"+ UDP_IP +":" + str(UDP_PORT))
 		socket.setsockopt(zmq.SUBSCRIBE,'')
 		#s.settimeout(1)
-		print("Listening!")
+		
 		#last_id_sent = float(datetime.now().strftime('%s.%f'))
 		while True:
 			data = socket.recv()
@@ -55,6 +53,7 @@ class node(threading.Thread):
 		self.play_process = None
 		self.is_on = False
 		self.mac = str(get_mac())
+		print("MAC:" + self.mac + " listening")
 		self.is_bcast = False
 		threading.Thread.__init__(self)
 		self.daemon = True
@@ -137,15 +136,9 @@ class node(threading.Thread):
 
 		self.pipeline_in.set_state(gst.STATE_PLAYING)
 		
-		
-		
 	def mute_node(self):		
 		self.is_on = False
 		self.pipeline_in.set_state(gst.STATE_PAUSED)
-		
-		#if self.pipeline_in:
-		#	self.pipeline_in = None
-
 		
 	def run(self):
 		self.l = Listener()
