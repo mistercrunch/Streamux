@@ -158,9 +158,9 @@ class node(threading.Thread):
 						elif msg[2] == "UNMUTE_NODE" and len(msg)>=3:
 							if msg[3] == self.mac: 
 								self.unmute_node()
-								print "not me"
-							else:
 								print "me"
+							else:
+								print "not me"
 						elif msg[2] == "START_STREAM" and len(msg)>=3:
 							if msg[3] == self.mac: self.start_streaming()
 						elif msg[2] == "STOP_STREAM" and len(msg)>=3:
