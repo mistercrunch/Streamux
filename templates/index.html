@@ -89,7 +89,7 @@
 		<div id="main">
 			<table id="nodes_table">
 				<thead>
-					<td>IP</td>
+					<td>MAC ADDRESS</td>
 					<td>IS_ON</td>
 					<td>IS_BCAST</td>
 				</thead>
@@ -145,7 +145,7 @@ function refresh_node_list(){
 
 		$.each(data, function(key, val) {
 			var new_tr = '<tr id="' + key + '">';
-			new_tr += '<td>' + val.IP + '</td>';
+			new_tr += '<td>' + key + '</td>';
 			new_tr += '<td class="clickable" onclick="flip_mute(this);">' + val.IS_ON + '</td>';
 			new_tr += '<td class="clickable" onclick="flip_bcast(this);">' + val.IS_BCAST +'</td>';
 			new_tr += '</tr>';

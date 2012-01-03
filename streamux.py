@@ -19,10 +19,14 @@ keep_msg			= 10
 
 class Listener(threading.Thread):
 	def __init__(self):
-		self.msg = []
+		self.msg_queue = []
 		threading.Thread.__init__(self)
 		self.daemon = True
 		self.latest_messages = []
+	
+	def msg(self):
+		if len(self.msg_queue) >= 1:
+			return self.msg_queue.pop()
 		
 	def run(self):
 		context = zmq.Context()
@@ -40,7 +44,7 @@ class Listener(threading.Thread):
 			
 			self.latest_messages.insert(0,msg)
 			self.latest_messages = self.latest_messages[:keep_msg]
-			self.msg = msg
+			self.msg_queue.append(msg)
 			
 
 
@@ -74,8 +78,9 @@ class node(threading.Thread):
 		
 		self.pipeline_out = gst.Pipeline("pipe_out")
 		
-		self.filesrc = gst.element_factory_make("filesrc", "file-source")
-		self.filesrc.set_property("location", "/home/mistercrunch/Code/Streamux/test.mp3")
+		#self.src = gst.element_factory_make("autoaudiosrc", "src")
+		self.src = gst.element_factory_make("filesrc", "src")
+		self.src.set_property("location", "/home/mistercrunch/Code/Streamux/test.mp3")
 		
 		self.mad 			= gst.element_factory_make("mad", "sink")
 		
@@ -88,12 +93,12 @@ class node(threading.Thread):
 		self.udpsink = gst.element_factory_make("udpsink", "updsink")
 		self.udpsink.set_property("host", UDP_IP)
 		self.udpsink.set_property("port", MUSIC_UDP_PORT)
-		self.udpsink.set_property("auto-multicast", "true")
-		self.udpsink.set_property("sync", "true")
+		self.udpsink.set_property("auto-multicast", True)
+		self.udpsink.set_property("sync", True)
 
 		
-		self.pipeline_out.add(self.filesrc, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
-		gst.element_link_many(self.filesrc, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
+		self.pipeline_out.add(self.src, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
+		gst.element_link_many(self.src, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
 
 		self.pipeline_out.set_state(gst.STATE_PLAYING)
         
@@ -148,18 +153,21 @@ class node(threading.Thread):
 		last_id_sent = 0
 
 		while True:
-			if self.l.msg:
-				msg = self.l.msg
-				self.l.msg = ""
-				
+			msg = self.l.msg()
+			if msg:
 				if len(msg)>=3:
 					if msg[2] == "NODE_INFO" and len(msg)>=5:
 						self.nodes[msg[1]] = {'IP':'Unknown', 'IS_ON':msg[3], 'IS_BCAST':msg[4]} 
 					else:
+						
 						if msg[2] == "MUTE_NODE" and len(msg)>=3:
 							if msg[3] == self.mac: self.mute_node()
 						elif msg[2] == "UNMUTE_NODE" and len(msg)>=3:
-							if msg[3] == self.mac: self.unmute_node()
+							if msg[3] == self.mac: 
+								self.unmute_node()
+								print "not me"
+							else:
+								print "me"
 						elif msg[2] == "START_STREAM" and len(msg)>=3:
 							if msg[3] == self.mac: self.start_streaming()
 						elif msg[2] == "STOP_STREAM" and len(msg)>=3:
