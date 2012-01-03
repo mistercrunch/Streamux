@@ -3,8 +3,7 @@
 		font-family:Verdana;
 		color:white;
 		background-color:grey;
-		margin:100px;
-
+		margin:50px;
     }
     td{
 		color:#AAAAAA;
@@ -108,11 +107,9 @@ function flip_mute(f){
 	var mac = $(f).parent().attr('id');
 	if ($(f).html()=='False'){
 		$.ajax('/unmute_node/' + mac);
-		//$(f).html('True')
 	}
 	else{
 		$.ajax('/mute_node/' + mac);
-		//$(f).html('False')
 	}
 	$(f).fadeOut('slow', function(){
 		refresh_node_list();

@@ -11,7 +11,7 @@ import gst
 UDP_IP 				= '225.0.0.250'
 UDP_PORT 			= 8123
 MUSIC_UDP_PORT		= UDP_PORT + 1
-POKE_INTERVAL		= 1
+POKE_INTERVAL		= 2
 
 keep_msg			= 10
 
@@ -138,7 +138,8 @@ class node(threading.Thread):
 		
 	def mute_node(self):		
 		self.is_on = False
-		self.pipeline_in.set_state(gst.STATE_PAUSED)
+		if self.pipeline_in:
+			self.pipeline_in.set_state(gst.STATE_PAUSED)
 		
 	def run(self):
 		self.l = Listener()
@@ -156,11 +157,7 @@ class node(threading.Thread):
 						if msg[2] == "MUTE_NODE" and len(msg)>=3:
 							if msg[3] == self.mac: self.mute_node()
 						elif msg[2] == "UNMUTE_NODE" and len(msg)>=3:
-							if msg[3] == self.mac: 
-								self.unmute_node()
-								print "me"
-							else:
-								print "not me"
+							if msg[3] == self.mac: self.unmute_node()
 						elif msg[2] == "START_STREAM" and len(msg)>=3:
 							if msg[3] == self.mac: self.start_streaming()
 						elif msg[2] == "STOP_STREAM" and len(msg)>=3:
@@ -221,6 +218,7 @@ if start_webserver:
 		def index(self):
 			return open('templates/index.html')
 		index.exposed = True
+	cherrypy.config.update({'log.screen':False,'log.access_file':'log/access.log','log.error_file':'log/error.log'})
 	cherrypy.quickstart(root())
 else:
 	while True:
