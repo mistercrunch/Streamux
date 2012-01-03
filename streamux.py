@@ -14,6 +14,8 @@ MUSIC_UDP_PORT		= UDP_PORT + 1
 POKE_INTERVAL		= 2
 
 keep_msg			= 10
+zmq_context = zmq.Context()
+
 
 class Listener(threading.Thread):
 	def __init__(self):
@@ -27,8 +29,8 @@ class Listener(threading.Thread):
 			return self.msg_queue.pop()
 		
 	def run(self):
-		context = zmq.Context()
-		socket = context.socket(zmq.SUB)
+		
+		socket = zmq_context.socket(zmq.SUB)
 
 		socket.connect ("epgm://"+ UDP_IP +":" + str(UDP_PORT))
 		socket.setsockopt(zmq.SUBSCRIBE,'')
@@ -58,8 +60,8 @@ class node(threading.Thread):
 		threading.Thread.__init__(self)
 		self.daemon = True
 		self.last_id_sent=0
-		self.context = zmq.Context()
-		self.socket = self.context.socket(zmq.PUB)
+		
+		self.socket = zmq_context.socket(zmq.PUB)
 		self.socket.bind("epgm://"+ UDP_IP +":" + str(UDP_PORT))
 
 		
