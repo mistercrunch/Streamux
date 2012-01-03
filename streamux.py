@@ -8,14 +8,18 @@ import pygst
 pygst.require("0.10")
 import gst
 
-UDP_IP 				= '225.0.0.250'
-UDP_PORT 			= 8123
+#-----------------------------------------------
+# Network config
+#-----------------------------------------------
+UDP_IP 				= '224.1.1.1'
+UDP_PORT 			= 5000
 MUSIC_UDP_PORT		= UDP_PORT + 1
 POKE_INTERVAL		= 2
+HTTP_PORT			= 8999
 
 keep_msg			= 10
-zmq_context = zmq.Context()
-
+zmq_context 		= zmq.Context()
+#-----------------------------------------------
 
 class Listener(threading.Thread):
 	def __init__(self):
@@ -34,12 +38,11 @@ class Listener(threading.Thread):
 
 		socket.connect ("epgm://"+ UDP_IP +":" + str(UDP_PORT))
 		socket.setsockopt(zmq.SUBSCRIBE,'')
-		#s.settimeout(1)
 		
-		#last_id_sent = float(datetime.now().strftime('%s.%f'))
 		while True:
 			data = socket.recv()
 			msg = data.split(':')
+			print "Received: " + msg
 			msg.insert(0, str(datetime.now()))
 			
 			self.latest_messages.insert(0,msg)
@@ -67,7 +70,6 @@ class node(threading.Thread):
 		
 	def send_msg(self, msg):
 		self.socket.send(msg)
-		#Networking setup
 		
 	def start_streaming(self):
 		self.is_bcast = True
@@ -89,20 +91,18 @@ class node(threading.Thread):
 		
 		self.faac 			= gst.element_factory_make("faac", "faac")
 
-		self.rtpmp4apay = gst.element_factory_make("rtpmp4apay", "rtpmp4apay")
+		self.rtpmp4apay 	= gst.element_factory_make("rtpmp4apay", "rtpmp4apay")
 				
 		self.udpsink = gst.element_factory_make("udpsink", "updsink")
 		self.udpsink.set_property("host", UDP_IP)
 		self.udpsink.set_property("port", MUSIC_UDP_PORT)
 		self.udpsink.set_property("auto-multicast", True)
 		self.udpsink.set_property("sync", True)
-
 		
 		self.pipeline_out.add(self.src, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
 		gst.element_link_many(self.src, self.mad, self.audioconvert, self.faac, self.rtpmp4apay, self.udpsink)
 
 		self.pipeline_out.set_state(gst.STATE_PLAYING)
-        
 		
 	def stop_streaming(self):
 		self.is_bcast = False
@@ -220,8 +220,17 @@ if start_webserver:
 		def index(self):
 			return open('templates/index.html')
 		index.exposed = True
-	cherrypy.config.update({'log.screen':False,'log.access_file':'log/access.log','log.error_file':'log/error.log'})
-	cherrypy.quickstart(root())
+		
+	global_conf = {
+			'global': 		{
+			'server.socket_host': '127.0.0.1',
+			'server.socket_port': HTTP_PORT,
+			'log.screen'		: False,
+			'log.access_file'	: 'log/access.log',
+			'log.error_file'	: 'log/error.log',
+		},
+	}
+	cherrypy.quickstart(root(), config=global_conf)
 else:
 	while True:
 		time.sleep(0.01)
