@@ -42,7 +42,6 @@ class Listener(threading.Thread):
 		while True:
 			data = socket.recv()
 			msg = data.split(':')
-			print "Received: " + msg
 			msg.insert(0, str(datetime.now()))
 			
 			self.latest_messages.insert(0,msg)

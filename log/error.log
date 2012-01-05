@@ -79,3 +79,72 @@
 [03/Jan/2012:12:06:23] ENGINE Bus EXITING
 [03/Jan/2012:12:06:23] ENGINE Bus EXITED
 [03/Jan/2012:12:06:23] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:26:31] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:26:31] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:26:31] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:26:31] ENGINE Bus STARTING
+[04/Jan/2012:20:26:31] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:26:31] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:26:31] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:26:31] ENGINE Bus STARTED
+[04/Jan/2012:20:26:55] ENGINE Keyboard Interrupt: shutting down bus
+[04/Jan/2012:20:26:55] ENGINE Bus STOPPING
+[04/Jan/2012:20:26:55] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:26:55] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:26:55] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:26:55] ENGINE Bus STOPPED
+[04/Jan/2012:20:26:55] ENGINE Bus EXITING
+[04/Jan/2012:20:26:55] ENGINE Bus EXITED
+[04/Jan/2012:20:26:55] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:28:57] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:28:57] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:28:57] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:28:57] ENGINE Bus STARTING
+[04/Jan/2012:20:28:57] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:28:57] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:28:57] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:28:57] ENGINE Bus STARTED
+[04/Jan/2012:20:29:15] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:29:15] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:29:15] ENGINE Bus STOPPING
+[04/Jan/2012:20:29:15] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:29:15] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:29:15] ENGINE Bus STOPPED
+[04/Jan/2012:20:29:15] ENGINE Bus EXITING
+[04/Jan/2012:20:29:15] ENGINE Bus EXITED
+[04/Jan/2012:20:29:15] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:29:15] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:29:15] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:29:15] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:29:15] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:29:15] ENGINE Bus STARTING
+[04/Jan/2012:20:29:15] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:29:15] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:29:15] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:29:15] ENGINE Bus STARTED
+[04/Jan/2012:20:29:19] ENGINE Keyboard Interrupt: shutting down bus
+[04/Jan/2012:20:29:19] ENGINE Bus STOPPING
+[04/Jan/2012:20:29:19] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:29:19] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:29:19] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:29:19] ENGINE Bus STOPPED
+[04/Jan/2012:20:29:19] ENGINE Bus EXITING
+[04/Jan/2012:20:29:19] ENGINE Bus EXITED
+[04/Jan/2012:20:29:19] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:29:23] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:29:23] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:29:23] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:29:23] ENGINE Bus STARTING
+[04/Jan/2012:20:29:23] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:29:23] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:29:23] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:29:23] ENGINE Bus STARTED
+[04/Jan/2012:20:30:33] ENGINE Keyboard Interrupt: shutting down bus
+[04/Jan/2012:20:30:33] ENGINE Bus STOPPING
+[04/Jan/2012:20:30:33] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:30:33] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:30:33] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:30:33] ENGINE Bus STOPPED
+[04/Jan/2012:20:30:33] ENGINE Bus EXITING
+[04/Jan/2012:20:30:33] ENGINE Bus EXITED
+[04/Jan/2012:20:30:33] ENGINE Waiting for child threads to terminate...
