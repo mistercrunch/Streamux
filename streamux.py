@@ -58,6 +58,8 @@ class node(threading.Thread):
 		self.play_process = None
 		self.is_on = False
 		self.mac = str(get_mac())
+		self.pipeline_out = None
+		self.pipeline_in = None
 		print("MAC:" + self.mac + " listening")
 		self.is_bcast = False
 		threading.Thread.__init__(self)
