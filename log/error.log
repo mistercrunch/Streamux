@@ -148,3 +148,110 @@
 [04/Jan/2012:20:30:33] ENGINE Bus EXITING
 [04/Jan/2012:20:30:33] ENGINE Bus EXITED
 [04/Jan/2012:20:30:33] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:34:07] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:34:07] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:34:07] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:34:07] ENGINE Bus STARTING
+[04/Jan/2012:20:34:07] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:34:07] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:34:07] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:34:07] ENGINE Bus STARTED
+[04/Jan/2012:20:36:17] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:36:17] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:36:17] ENGINE Bus STOPPING
+[04/Jan/2012:20:36:17] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:36:17] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:36:17] ENGINE Bus STOPPED
+[04/Jan/2012:20:36:17] ENGINE Bus EXITING
+[04/Jan/2012:20:36:17] ENGINE Bus EXITED
+[04/Jan/2012:20:36:17] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:36:17] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:36:17] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:36:17] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:36:17] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:36:17] ENGINE Bus STARTING
+[04/Jan/2012:20:36:17] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:36:17] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:36:17] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:36:17] ENGINE Bus STARTED
+[04/Jan/2012:20:37:45] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:37:45] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:37:45] ENGINE Bus STOPPING
+[04/Jan/2012:20:37:45] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:37:45] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:37:45] ENGINE Bus STOPPED
+[04/Jan/2012:20:37:45] ENGINE Bus EXITING
+[04/Jan/2012:20:37:45] ENGINE Bus EXITED
+[04/Jan/2012:20:37:45] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:37:45] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:37:45] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:37:45] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:37:45] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:37:45] ENGINE Bus STARTING
+[04/Jan/2012:20:37:45] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:37:45] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:37:45] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:37:45] ENGINE Bus STARTED
+[04/Jan/2012:20:44:52] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:44:52] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:44:52] ENGINE Bus STOPPING
+[04/Jan/2012:20:44:52] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:44:52] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:44:52] ENGINE Bus STOPPED
+[04/Jan/2012:20:44:52] ENGINE Bus EXITING
+[04/Jan/2012:20:44:52] ENGINE Bus EXITED
+[04/Jan/2012:20:44:52] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:44:52] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:44:52] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:44:52] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:44:52] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:44:52] ENGINE Bus STARTING
+[04/Jan/2012:20:44:52] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:44:52] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:44:52] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:44:52] ENGINE Bus STARTED
+[04/Jan/2012:20:45:10] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:45:10] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:45:10] ENGINE Bus STOPPING
+[04/Jan/2012:20:45:15] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:45:15] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:45:15] ENGINE Bus STOPPED
+[04/Jan/2012:20:45:15] ENGINE Bus EXITING
+[04/Jan/2012:20:45:15] ENGINE Bus EXITED
+[04/Jan/2012:20:45:15] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:45:15] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:45:15] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:45:15] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:45:15] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:45:15] ENGINE Bus STARTING
+[04/Jan/2012:20:45:15] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:45:15] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:45:16] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:45:16] ENGINE Bus STARTED
+[04/Jan/2012:20:46:12] ENGINE Restarting because ./streamux.py changed.
+[04/Jan/2012:20:46:12] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:46:12] ENGINE Bus STOPPING
+[04/Jan/2012:20:46:12] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:46:12] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:46:12] ENGINE Bus STOPPED
+[04/Jan/2012:20:46:12] ENGINE Bus EXITING
+[04/Jan/2012:20:46:12] ENGINE Bus EXITED
+[04/Jan/2012:20:46:12] ENGINE Waiting for child threads to terminate...
+[04/Jan/2012:20:46:12] ENGINE Re-spawning ./streamux.py webserver
+[04/Jan/2012:20:46:12] ENGINE Listening for SIGHUP.
+[04/Jan/2012:20:46:12] ENGINE Listening for SIGTERM.
+[04/Jan/2012:20:46:12] ENGINE Listening for SIGUSR1.
+[04/Jan/2012:20:46:12] ENGINE Bus STARTING
+[04/Jan/2012:20:46:12] ENGINE Started monitor thread '_TimeoutMonitor'.
+[04/Jan/2012:20:46:12] ENGINE Started monitor thread 'Autoreloader'.
+[04/Jan/2012:20:46:12] ENGINE Serving on 127.0.0.1:8999
+[04/Jan/2012:20:46:12] ENGINE Bus STARTED
+[04/Jan/2012:20:46:29] ENGINE Keyboard Interrupt: shutting down bus
+[04/Jan/2012:20:46:29] ENGINE Bus STOPPING
+[04/Jan/2012:20:46:29] ENGINE HTTP Server cherrypy._cpwsgi_server.CPWSGIServer(('127.0.0.1', 8999)) shut down
+[04/Jan/2012:20:46:29] ENGINE Stopped thread 'Autoreloader'.
+[04/Jan/2012:20:46:29] ENGINE Stopped thread '_TimeoutMonitor'.
+[04/Jan/2012:20:46:29] ENGINE Bus STOPPED
+[04/Jan/2012:20:46:29] ENGINE Bus EXITING
+[04/Jan/2012:20:46:29] ENGINE Bus EXITED
+[04/Jan/2012:20:46:29] ENGINE Waiting for child threads to terminate...

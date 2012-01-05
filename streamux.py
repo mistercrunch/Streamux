@@ -21,7 +21,7 @@ keep_msg			= 10
 zmq_context 		= zmq.Context()
 #-----------------------------------------------
 
-class Listener(threading.Thread):
+class listener(threading.Thread):
 	def __init__(self):
 		self.msg_queue = []
 		threading.Thread.__init__(self)
@@ -51,6 +51,7 @@ class Listener(threading.Thread):
 
 
 class node(threading.Thread):	
+	
 	def __init__(self):
 		self.nodes = {}
 		self.stream_process = None
@@ -73,6 +74,7 @@ class node(threading.Thread):
 	def start_streaming(self):
 		self.is_bcast = True
 		"""
+		Equivalent code to this bellow
 		cmd = "/usr/bin/gst-launch-0.10 filesrc location=/home/mistercrunch/Code/Streamux/test.mp3 ! mad ! audioconvert ! faac ! rtpmp4apay ! udpsink host="+ stsr(UDP_IP) +" port="+ str(MUSIC_UDP_PORT) + " auto-multicast=true sync=true"
 		print cmd
 		"""
@@ -105,7 +107,8 @@ class node(threading.Thread):
 		
 	def stop_streaming(self):
 		self.is_bcast = False
-		self.pipeline_out.set_state(gst.STATE_PAUSED)
+		if self.pipeline_out:
+			self.pipeline_out.set_state(gst.STATE_PAUSED)
 		
 	def send_info(self):
 		self.send_msg(self.mac + ':NODE_INFO:' + str(self.is_on) + ':' + str(self.is_bcast))
@@ -143,7 +146,7 @@ class node(threading.Thread):
 			self.pipeline_in.set_state(gst.STATE_PAUSED)
 		
 	def run(self):
-		self.l = Listener()
+		self.l = listener()
 		self.l.start()
 		last_id_sent = 0
 
@@ -154,17 +157,16 @@ class node(threading.Thread):
 					if msg[2] == "NODE_INFO" and len(msg)>=5:
 						self.nodes[msg[1]] = {'IP':'Unknown', 'IS_ON':msg[3], 'IS_BCAST':msg[4]} 
 					else:
-						
 						if msg[2] == "MUTE_NODE" and len(msg)>=3:
 							if msg[3] == self.mac: self.mute_node()
 						elif msg[2] == "UNMUTE_NODE" and len(msg)>=3:
 							if msg[3] == self.mac: self.unmute_node()
 						elif msg[2] == "START_STREAM" and len(msg)>=3:
 							if msg[3] == self.mac: self.start_streaming()
+							else: self.stop_streaming()
 						elif msg[2] == "STOP_STREAM" and len(msg)>=3:
 							if msg[3] == self.mac: self.stop_streaming()
 						self.send_info()
-						
 						
 			if self.last_id_sent + POKE_INTERVAL < float(datetime.now().strftime('%s.%f')):
 				self.send_info()
